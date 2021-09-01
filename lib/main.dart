@@ -5,51 +5,81 @@ import './result.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
+  @override
   State<StatefulWidget> createState() {
     return _MyStateApp();
   }
 }
 
 class _MyStateApp extends State<MyApp> {
-  static final _questions = const [
+  final _questions = const [
     {
       'questionText': 'What\'s your favorite color?',
-      'answers': ['Blue', 'Yellow', 'Green', 'Red']
+      'answers': [
+        {'text': 'Blue', 'score': 10},
+        {'text': 'Yellow', 'score': 3},
+        {'text': 'Green', 'score': 2},
+        {'text': 'Red', 'score': 6}
+      ]
     },
     {
       'questionText': 'What\'s your favorite sport?',
-      'answers': ['Football', 'Bascketball', 'Voliball', 'Swimming']
+      'answers': [
+        {'text': 'Football', 'score': 6},
+        {'text': 'Bascketball', 'score': 10},
+        {'text': 'Voliball', 'score': 3},
+        {'text': 'Swimming', 'score': 8}
+      ]
     },
     {
       'questionText': 'What\'s your favorite fruite?',
-      'answers': ['Strawberry', 'Banana', 'Coconat', 'Apple']
+      'answers': [
+        {'text': 'Strawberry', 'score': 5},
+        {'text': 'Banana', 'score': 7},
+        {'text': 'Coconat', 'score': 6},
+        {'text': 'Apple', 'score': 2}
+      ]
     },
     {
       'questionText': 'What\'s your favorite brand?',
-      'answers': ['Samsung', 'LG', 'Sony', 'Apple']
+      'answers': [
+        {'text': 'Samsung', 'score': 10},
+        {'text': 'LG', 'score': 2},
+        {'text': 'Sony', 'score': 4},
+        {'text': 'Apple', 'score': 7}
+      ]
     },
   ];
   var _questionIndex = 0;
-  void _AnsweredQuestion() {
+  var _totalScore = 0;
+  void _quizResetHandler() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
+
     setState(() {
       _questionIndex = _questionIndex + 1;
     });
-    // print(questionIndex);
   }
 
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return (MaterialApp(
+    return MaterialApp(
         home: Scaffold(
       appBar: AppBar(title: Text('Quiz App')),
       body: _questions.length > _questionIndex
           ? Quiz(
-              AnsweredQuestion: _AnsweredQuestion,
+              answerQuestion: _answerQuestion,
               questionIndex: _questionIndex,
               questions: _questions,
             )
-          : Result(),
-    )));
+          : Result(_totalScore,_quizResetHandler),
+    ));
   }
 }
